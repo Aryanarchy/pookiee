@@ -72,12 +72,10 @@
       transition: 0.3s;
       padding: 10px;
     }
-
     .box:hover {
       transform: scale(1.08);
       background: #ffe6f2;
     }
-
     .box img {
       width: 100px;
       height: 100px;
@@ -93,7 +91,6 @@
       animation: fall linear forwards;
       z-index: 1;
     }
-
     @keyframes fall {
       to {
         transform: translateY(110vh) rotate(360deg);
@@ -115,7 +112,6 @@
       align-items: center;
       z-index: 10;
     }
-
     .modal-content {
       background: #fff;
       border: 3px solid #ff66b2;
@@ -123,23 +119,20 @@
       padding: 25px;
       text-align: center;
       width: 80%;
-      max-width: 400px;
+      max-width: 500px;
       box-shadow: 4px 4px 12px rgba(0,0,0,0.2);
       animation: popup 0.4s ease;
     }
-
     .modal-content h2 {
       margin: 0 0 10px;
       font-size: 1.6rem;
       color: #ff3385;
     }
-
     .modal-content p {
       font-size: 1.2rem;
       color: #333;
     }
-
-    .close-btn {
+    .close-btn, .more-btn {
       margin-top: 15px;
       background: #ff66b2;
       color: white;
@@ -150,10 +143,9 @@
       cursor: pointer;
       transition: 0.3s;
     }
-    .close-btn:hover {
+    .close-btn:hover, .more-btn:hover {
       background: #ff3385;
     }
-
     @keyframes popup {
       from { transform: scale(0.7); opacity: 0; }
       to { transform: scale(1); opacity: 1; }
@@ -170,19 +162,36 @@
       text-shadow: 1px 1px #fff;
       animation: pulse 1.5s infinite;
     }
-
-    /* Pulse effect */
     @keyframes pulse {
       0% { transform: scale(1); }
       50% { transform: scale(1.1); color: #ff66b2; }
       100% { transform: scale(1); }
+    }
+
+    /* Game cards */
+    .card {
+      width: 80px;
+      height: 80px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-size: 2rem;
+      background: #ffe6f2;
+      border: 2px solid #ff66b2;
+      border-radius: 10px;
+      cursor: pointer;
+      user-select: none;
+      transition: 0.3s;
+    }
+    .card.matched {
+      background: #ffb3d9;
+      cursor: default;
     }
   </style>
 </head>
 <body>
   <header>💖 Welcome to India, Dixita (Pookie)! 💖</header>
 
-  <!-- Play / Pause Button -->
   <button class="music-btn" onclick="toggleMusic()">🎶 Play / Pause Music</button>
 
   <div class="container">
@@ -190,14 +199,14 @@
 
 I’m so happy you’re finally here! Having you in Pune feels so special, and I can’t wait to make so many memories with you. 
 
-Thank you for always being there for me, especially during my hardest times — your love and support mean more to me than words can ever explain.
+Thank you for always being there for me, especially during my hardest times  your love and support mean more to me than words can ever explain.
 
 I just want you to know how much I love you, Pookie, and how grateful I am to have you in my life. 💕`)">
       <img src="images/box1.jpg" alt="Hello Kitty">
       📩 My Message
     </div>
 
-    <div class="box" onclick="openModal('I’m coming to meet you on 27 & 28 September 🎉')">
+    <div class="box" onclick="openDateModal()">
       <img src="images/box2.jpg" alt="DATE">
       📅 Our Meetup Date
     </div>
@@ -206,9 +215,11 @@ I just want you to know how much I love you, Pookie, and how grateful I am to ha
       <img src="images/box3.jpg" alt="Gift">
       🎁 Your Surprise Gift
     </div>
+
+    <div class="box" onclick="openGame()">🎮 Play Game</div>
   </div>
 
-  <!-- Modal -->
+  <!-- General Modal -->
   <div id="popup" class="modal">
     <div class="modal-content">
       <h2>💖 For Pookie 💖</h2>
@@ -217,10 +228,37 @@ I just want you to know how much I love you, Pookie, and how grateful I am to ha
     </div>
   </div>
 
-  <!-- Footer -->
-  <footer>
-    💕 Made by your Pookie 💕
-  </footer>
+  <!-- Date Modal with More button -->
+  <div id="date-popup" class="modal">
+    <div class="modal-content">
+      <h2>📅 Our Meetup Date</h2>
+      <p>I’m coming to meet you on <b>27 & 28 September 🎉</b></p>
+      <button class="more-btn" onclick="showPlaces()">More</button>
+      <button class="close-btn" onclick="closeDateModal()">Close</button>
+      <div id="places" style="margin-top:15px; display:none;">
+        <h3>🌸 Places we’ll visit 🌸</h3>
+        <div style="display:grid; gap:10px; justify-content:center;">
+          <div>🏰 Shaniwar Wada <br><img src="images/shaniwarwada.jpg" width="200"></div>
+          <div>🌳 Park <br><img src="images/park.jpg" width="200"></div>
+          <div>🎮 Arcade in Mall <br><img src="images/arcade.png" width="200"></div>
+          <div>🍽️ My fav food spots in Pune <br><img src="images/food.jpeg" width="200"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Game Modal -->
+  <div id="game-modal" class="modal">
+    <div class="modal-content" style="max-width:650px; width:95%; height:auto;">
+      <h2>🎀 Hello Kitty Emoji Matching 🎀</h2>
+      <p>Flip and match all the pairs!</p>
+      <div id="game-board" style="display:grid; grid-template-columns:repeat(4,80px); gap:10px; justify-content:center; margin:20px auto;"></div>
+      <p id="game-status">Moves: 0</p>
+      <button class="close-btn" onclick="closeGame()">Close</button>
+    </div>
+  </div>
+
+  <footer>💕 Made by your Pookie 💕</footer>
 
   <!-- Background music -->
   <audio id="bg-music" autoplay loop>
@@ -229,7 +267,7 @@ I just want you to know how much I love you, Pookie, and how grateful I am to ha
   </audio>
 
   <script>
-    // Hearts raining
+    // Hearts
     function createHeart() {
       const heart = document.createElement("div");
       heart.classList.add("heart");
@@ -237,24 +275,17 @@ I just want you to know how much I love you, Pookie, and how grateful I am to ha
       heart.style.left = Math.random() * 100 + "vw";
       heart.style.animationDuration = (3 + Math.random() * 2) + "s";
       document.body.appendChild(heart);
-
-      setTimeout(() => {
-        heart.remove();
-      }, 5000);
+      setTimeout(() => heart.remove(), 5000);
     }
     setInterval(createHeart, 500);
 
-    // Music control
+    // Music
     const music = document.getElementById("bg-music");
     function toggleMusic() {
-      if (music.paused) {
-        music.play();
-      } else {
-        music.pause();
-      }
+      if (music.paused) music.play(); else music.pause();
     }
 
-    // Modal control
+    // General Modal
     function openModal(message) {
       document.getElementById("modal-text").innerText = message;
       document.getElementById("popup").style.display = "flex";
@@ -262,8 +293,69 @@ I just want you to know how much I love you, Pookie, and how grateful I am to ha
     function closeModal() {
       document.getElementById("popup").style.display = "none";
     }
+
+    // Date Modal
+    function openDateModal() {
+      document.getElementById("date-popup").style.display = "flex";
+    }
+    function closeDateModal() {
+      document.getElementById("date-popup").style.display = "none";
+    }
+    function showPlaces() {
+      document.getElementById("places").style.display = "block";
+    }
+
+    // Emoji Matching Game
+    const emojis = ["🐱","🎀","💕","🌸","🍓","🧸","🍰","🐾"];
+    let cards = [], flipped = [], moves = 0, matched = 0;
+
+    function startGame() {
+      moves = 0; matched = 0;
+      document.getElementById("game-status").innerText = "Moves: 0";
+      const board = document.getElementById("game-board");
+      board.innerHTML = "";
+      cards = [...emojis, ...emojis].sort(() => Math.random() - 0.5);
+      cards.forEach((emoji, idx) => {
+        const card = document.createElement("div");
+        card.classList.add("card");
+        card.dataset.emoji = emoji;
+        card.dataset.index = idx;
+        card.innerText = "❓";
+        card.onclick = flipCard;
+        board.appendChild(card);
+      });
+    }
+
+    function flipCard() {
+      if (flipped.length === 2 || this.classList.contains("matched")) return;
+      this.innerText = this.dataset.emoji;
+      flipped.push(this);
+      if (flipped.length === 2) {
+        moves++;
+        document.getElementById("game-status").innerText = "Moves: " + moves;
+        if (flipped[0].dataset.emoji === flipped[1].dataset.emoji) {
+          flipped.forEach(c => c.classList.add("matched"));
+          matched++;
+          if (matched === emojis.length) {
+            setTimeout(() => alert("🎉 Yay Pookie! You matched all pairs in " + moves + " moves! 🎀"), 300);
+          }
+          flipped = [];
+        } else {
+          setTimeout(() => {
+            flipped.forEach(c => c.innerText = "❓");
+            flipped = [];
+          }, 800);
+        }
+      }
+    }
+
+    function openGame() {
+      document.getElementById("game-modal").style.display="flex";
+      startGame();
+    }
+    function closeGame() {
+      document.getElementById("game-modal").style.display="none";
+    }
   </script>
 </body>
 </html>
-
-
